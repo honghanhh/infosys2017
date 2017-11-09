@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\title{Information System - Lab work 1}
+\author{Tran Thi Hong Hanh}
+\date{7 November 2017}
+
+\begin{document}
+
+\maketitle
+
+\section{Installation}
+\subsection{Clone employees database from Github}
+\begin{equation}
+git\ clone\ git@github.com:datacharmer/test\_db.git
+\end{equation}
+\subsection{Change directory to resporitory.}
+\subsection{Install the database}
+\begin{equation}
+mysql -u\ root\ -p < employees.sql
+\end{equation}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.7]{install.PNG}
+\end{figure}
+
+\section{Verifying database}
+
+\begin{figure}
+\centering
+\includegraphics[scale = 0.8]{test1.PNG}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[scale = 0.8]{test2.PNG}
+\end{figure}
+
+\end{document}
