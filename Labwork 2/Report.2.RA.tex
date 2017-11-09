@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\title{Information System - Lab work 2}
+\author{Tran Thi Hong Hanh}
+\date{8 November 2017}
+
+\begin{document}
+
+\maketitle
+\section*{Database}
+\begin{itemize}
+	\item employees (emp\_no, birth\_date, first\_name, last\_name, gender)
+	\item departments (dept\_no, dept\_name)
+	\item dept\_emp (emp\_no, dept\_no, from\_date, to\_date)
+	\item dept\_manager (dept\_no, emp\_no, from\_date, to\_date)
+	\item titles (emp\_no, title, from\_date, to\_date)
+	\item salaries (emp\_no, salary, from\_date, to\_date)
+\end{itemize}
+\section*{Relational Algebra}
+\begin{enumerate}
+	\item All info of all employees.
+	$$\sigma(employees)$$
+	\item All info of all departments.
+	$$\sigma(department)$$
+	\item Full names of all employees.
+	 $$\pi_{first\_name, last\_name} (employees)$$
+	\item Names of all departments
+	$$\pi_{dept\_name} (departments)$$
+	\item Full names of employees working in "ICT" department.
+	$$ \pi_{first\_name, last\_name}(employees \bowtie (\sigma_{dept\_name = "ICT"} (departments \bowtie dept\_emp ))$$
+	\item Full names of male employees working in "BIO" department.
+	 $$ \pi_{first\_name, last\_name}(\sigma_{gender = "M"} employees \bowtie (dept\_emp \bowtie \sigma_{dept\_name = "BIO"} departments))$$
+	\item Salaries of female employees working in "WEO" department.
+	$$ \pi_{salary}((\sigma_{gender = "F"} employees  \bowtie salaries) \bowtie (dept\_emp \bowtie \sigma_{dept\_name = "WEO"} departments))$$
+	\item Full names of employees who have the same last name as their manager.
+	$$ R_{1}: = \pi_{first\_name, last\_name, dept\_name}(dept\_manager \bowtie employees \bowtie departments)$$
+	$$ R_{2}: = \rho_{first\_name1, last\_name1, dept\_name1/first\_name, last\_name, dept\_name }(R_{1})$$
+	$$ R_{3}: = \pi_{firt\_name, last\_name, dept\_name} (dept\_emp \bowtie employees \bowtie departments) $$
+	$$ R_{4}: = \sigma_{last_name = last_name1 and dept_name = dept_name1}(R_{3} \bowtie R_{2})$$
+	\item Full names of managers who have been doing the job at least twice.
+	$$ \pi_{first\_name, last\_name}( \sigma_{count(emp\_no > 2)}(dept\_manager \bowtie employees \bowtie departments))$$
+	\item Full names of employees who was paid more than \$1000000.
+	$$ \pi_{first\_name, last\_name}(\sigma_{salary > 1000000}(salaries \bowtie employees)$$
+	\item Names of all departments that have employees paid more than \$1000000.
+	$$ \pi_{dept\_name}(\sigma_{salary > 1000000}(salaries \bowtie (dept_emp \bowtie deparments)$$
+\end{enumerate}
+\end{document}
