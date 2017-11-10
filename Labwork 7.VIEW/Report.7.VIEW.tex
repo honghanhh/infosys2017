@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{listings}
-\title{Information System - Lab work 6}
+\title{Information System - Lab work 7}
 \author{Tran Thi Hong Hanh}
 \date{10 November 2017}
 
@@ -18,22 +18,27 @@
 	\item titles (emp\_no, title, from\_date, to\_date)
 	\item salaries (emp\_no, salary, from\_date, to\_date)
 \end{itemize}
-\section*{SQL queries using subqueries}
+\section*{SQL queries using view}
 \begin{enumerate}
 	\item Who have the same name as the managers of the "Finance" department?\\
 	\begin{lstlisting}{showstringspaces=false}[language=SQL]
+CREATE VIEW  SameNameFinanceManager AS
 SELECT emp_no, CONCAT(first_name, "", last_name) AS full_name 
 FROM employees WHERE last_name IN (
-	SELECT last_name FROM dept_manager 
+	SELECT last_name 
+    FROM dept_manager 
     JOIN employees 
     ON dept_manager.emp_no = employees.emp_no
     JOIN departments 
     ON dept_manager.dept_no = departments.dept_no
 	WHERE dept_name = "Finance");
+
+SELECT * FROM SameNameFinanceManager;
 	\end{lstlisting}
 	
 	\item Who in the "Production" department were hired after the promotion of the last manager in that departments?\\
 	\begin{lstlisting}{showstringspaces=false}
+CREATE VIEW  HiredInProductionFromLastManager AS
 SELECT employees.emp_no,
 CONCAT(first_name, "", last_name) AS fullname, hire_date
 FROM employees 
@@ -45,33 +50,40 @@ JOIN (SELECT emp_no FROM departments
 	  		FROM dept_manager 
 	  		NATURAL JOIN departments
 			WHERE dept_name = 'Production');
+			
+SELECT * FROM  HiredInProductionFromLastManager;
 	\end{lstlisting}
-	
 	
 	\item Find the average salary of each department, from highest to lowest.	
 	\begin{lstlisting}{showstringspaces=false}
-SELECT dept_no, dept_name, AVG(R1_salary)
-FROM (SELECT emp_no, AVG(salary) AS R1_salary 
-FROM salaries GROUP BY emp_no) AS R1 
-JOIN (SELECT emp_no,dept_emp.dept_no, dept_name 
+CREATE VIEW R1 AS
+SELECT emp_no, AVG(salary) AS R1_salary 
+FROM salaries GROUP BY emp_no;
+
+CREATE VIEW R2 AS
+SELECT emp_no,dept_emp.dept_no, dept_name 
 FROM dept_emp 
-JOIN departments 
-ON dept_emp.dept_no = departments.dept_no) AS R2
-ON R2.emp_no = R1.emp_no
+JOIN departments ON dept_emp.dept_no = departments.dept_no;
+ 
+SELECT dept_no, dept_name, AVG(R1_salary)
+FROM R1 JOIN R2 ON R2.emp_no = R1.emp_no
 GROUP BY dept_name 
 ORDER BY AVG(R1_salary) DESC;
-
 	\end{lstlisting}
 	
 	\item Find the average salary for each type of Engineer, from highest to lowest.
-	
-	\begin{lstlisting}{showstringspaces=false}
+	\begin{lstlisting}{showstringspaces=false}	
+CREATE VIEW R3 AS
+SELECT emp_no, AVG(salary) AS R3_salary 
+FROM salaries GROUP BY emp_no; 
+
+CREATE VIEW R4 AS
+SELECT title, emp_no 
+FROM titles WHERE title LIKE '%Engineer%';
+
 SELECT title, AVG(R3_salary)
-FROM (SELECT emp_no, AVG(salary) AS R3_salary 
-FROM salaries GROUP BY emp_no ) AS R3
-JOIN (SELECT title, emp_no 
-FROM titles WHERE title LIKE '%Engineer%' ) AS R4
-ON R3.emp_no = R4.emp_no
+FROM R3
+JOIN R4 ON R3.emp_no = R4.emp_no
 GROUP BY title
 ORDER BY AVG(R3_salary) DESC;
 	\end{lstlisting}
@@ -80,7 +92,7 @@ ORDER BY AVG(R3_salary) DESC;
 
 \section*{Results}
 
-The figure below presents the results after implement queries (limit from 0 to 10 for some long results
+The figure 1 presents the results after implement queries (limit from 0 to 10 for some long results
 ) above:\\
 \begin{figure}
 \includegraphics[scale = 0.8]{result.PNG}
