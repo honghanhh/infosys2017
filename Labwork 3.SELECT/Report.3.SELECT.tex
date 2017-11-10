@@ -52,13 +52,13 @@ SELECT CONCAT(first_name,"", last_name) AS full_name
 FROM employees
 JOIN dept_emp ON employees.emp_no = dept_emp.emp_no
 JOIN departments ON dept_emp.dept_no = departments.dept_no
-WHERE dept_name = 'Sales')
+WHERE dept_name = "Sales"
 UNION
-(SELECT CONCAT(first_name,"", last_name) AS full_name
+SELECT CONCAT(first_name,"", last_name) AS full_name
 FROM employees
 JOIN dept_manager ON employees.emp_no = dept_manager.emp_no
 JOIN departments ON dept_manager.dept_no = departments.dept_no
-WHERE dept_name = 'Sales')
+WHERE dept_name = "Sales";
 	\end{lstlisting}	
 	
 	\item Full names of male employees working in "Finance" department.\\
@@ -92,7 +92,7 @@ WHERE gender="F" AND dept_name="Marketing";
 	
 	\begin{lstlisting}[language=SQL]	
 SELECT R1.full_name
-FROM SELECT CONCAT(first_name,"", last_name) AS full_name,
+FROM (SELECT CONCAT(first_name,"", last_name) AS full_name,
 last_name, employees.emp_no AS empno 
 FROM employees
 JOIN dept_emp
@@ -138,7 +138,7 @@ WHERE salary > 100000;
 
 \section*{Results}
 
-The figure below presents the results after implement 11 queries (limit from 1 to 10 for some long results
+The figure below presents the results after implement 11 queries (limit from 0 to 10 for some long results
 ) above:\\
 \begin{figure}
 \includegraphics[scale = 0.65]{result.PNG}
