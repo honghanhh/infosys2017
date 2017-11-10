@@ -22,36 +22,37 @@
 \begin{enumerate}
 	\item Who have the same name as the managers of the "Finance" department?\\
 	\begin{lstlisting}{showstringspaces=false}[language=SQL]
-CREATE VIEW  SameNameFinanceManager AS
-SELECT emp_no, CONCAT(first_name, "", last_name) AS full_name 
-FROM employees WHERE last_name IN (
-	SELECT last_name 
-    FROM dept_manager 
-    JOIN employees 
-    ON dept_manager.emp_no = employees.emp_no
-    JOIN departments 
-    ON dept_manager.dept_no = departments.dept_no
-	WHERE dept_name = "Finance");
+CREATE VIEW R0 AS 
+SELECT first_name, last_name 
+FROM dept_manager 
+JOIN employees
+ON dept_manager.emp_no = employees.emp_no
+JOIN departments
+ON dept_manager.dept_no = departments.dept_no
+WHERE dept_name = "Finance";
+	
+SELECT emp_no, CONCAT(first_name, " ", last_name) as full_name 
+FROM employees WHERE last_name IN 
+(SELECT last_name FROM R0);
 
-SELECT * FROM SameNameFinanceManager;
+
 	\end{lstlisting}
 	
 	\item Who in the "Production" department were hired after the promotion of the last manager in that departments?\\
 	\begin{lstlisting}{showstringspaces=false}
-CREATE VIEW  HiredInProductionFromLastManager AS
-SELECT employees.emp_no,
-CONCAT(first_name, "", last_name) AS fullname, hire_date
-FROM employees 
-JOIN (SELECT emp_no FROM departments 
-	  NATURAL JOIN dept_emp
-	  WHERE dept_name = 'Production') AS R1
-	  ON employees.emp_no = R1.emp_no
-	  WHERE hire_date > (SELECT MAX(from_date)
-	  		FROM dept_manager 
-	  		NATURAL JOIN departments
-			WHERE dept_name = 'Production');
-			
-SELECT * FROM  HiredInProductionFromLastManager;
+CREATE VIEW R6 AS 
+SELECT emp_no FROM departments 
+NATURAL JOIN dept_emp
+WHERE dept_name = "Production";
+
+SELECT employees.emp_no, 
+CONCAT(first_name, " ", last_name) as full_name, hire_date
+FROM employees JOIN R6
+ON employees.emp_no = R6.emp_no
+WHERE hire_date > (SELECT MAX(from_date) FROM dept_manager
+	NATURAL JOIN departments
+	WHERE dept_name = "Production");
+ 
 	\end{lstlisting}
 	
 	\item Find the average salary of each department, from highest to lowest.	
