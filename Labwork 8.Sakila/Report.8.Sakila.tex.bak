@@ -94,24 +94,18 @@ HAVING ABS(AVG(replacement_cost)) - AVG(rental_rate)>17 ) AS R7;
 SELECT R7.district, MAX(postcode)
 FROM (SELECT district, MIN(postal_code) AS postcode 
 FROM address 
-WHERE postal_code IS NOT NULL AND district IS NOT NULL
-GROUP BY district 
-ORDER BY MIN(postal_code) DESC) AS R7;
+WHERE postal_code is not null and district  is not null
+		  group by district 
+		  order by min(postal_code) desc ) as temp;
    
 	\end{lstlisting}
 		
 	\item Find the names (first and last) of all the actors and customers whose first name is the same as the first name of the actor with ID 101 (exclude the actor with ID 101).
 	
 	\begin{lstlisting}{showstringspaces=false}
-SELECT first_name, last_name
-FROM customer 
-WHERE customer.first_name = (SELECT first_name
-FROM actor WHERE actor_id = 101)
-UNION
-SELECT first_name, last_name FROM actor 
-WHERE first_name = (SELECT first_name 
-FROM actor WHERE actor_id =101) 
-AND actor_id <> 101 ;
+ select first_name, last_name from customer where customer.first_name = (select first_name from actor where actor_id =101)
+   union 
+   select first_name, last_name from actor where first_name = (select first_name from actor where actor_id =101) and actor_id <> 101 ;
 	
 	\end{lstlisting}
 			
