@@ -40,21 +40,22 @@ WHERE postal_code LIKE "57%"
 ORDER BY address;
 	\end{lstlisting}
 	
-	\item How many films involve a "DRAWRF" in their titles?
+	\item How many films involve a "DWARF" in their titles?
 	
 	\begin{lstlisting}{showstringspaces=false}
 SELECT COUNT(*) 
 FROM film
-WHERE title LIKE "%DRAWF%";
+WHERE title LIKE "%DWARF%";
 	\end{lstlisting}
 	
 	\item Find full names of actors who played in a film involving 'WAR' in title and longer than 2.5 hours, along with the title, run length and release year of the movie, sorted by the actors' last names. 
 	
 	\begin{lstlisting}{showstringspaces=false}
-SELECT (first_name, " ",  last_name ) AS full_name,
-title, release_year, length 
+SELECT CONCAT(first_name, " ",  last_name ) AS full_name,
+title, release_year, length
 FROM actor 
 JOIN film_actor ON actor.actor_id=film_actor.actor_id
+JOIN film ON film.film_id = film_actor.film_id
 WHERE title LIKE '%WAR%' AND length > 150
 ORDER BY last_name;
 	\end{lstlisting}
@@ -62,7 +63,7 @@ ORDER BY last_name;
 	\item Find all the film categories in which there are between 55 and 65 films. Return the names of these categories and the number of films per category, sorted by the number of films descending.
 	
 	\begin{lstlisting}{showstringspaces=false}
-SELECT VIEW R6 AS
+CREATE VIEW R6 AS
 SELECT film_category.category_id, category.name, 
 COUNT(film_category.category_id) as countfilm	
 FROM film_category
@@ -117,5 +118,18 @@ AND actor_id <> 101 ;
 			
 \end{enumerate}
 
+\section*{Results}
+
+The figure below presents the results after implement queries (limit from 0 to 10 for some long results):\\
+\begin{figure}
+\centering
+\includegraphics[scale = 0.72]{result.PNG}
+\caption{Result of all queries except query 3}
+\end{figure}
+
+\begin{figure}
+\includegraphics[scale = 0.45]{result3.PNG}
+\caption{Results of query 3}
+\end{figure}
 
 \end{document}
