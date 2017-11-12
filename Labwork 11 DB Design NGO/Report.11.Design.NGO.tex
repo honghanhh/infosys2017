@@ -105,6 +105,7 @@ We want to know what actions are realised in each city, storing its name, countr
 		\item HO\_id INT
 		\item address VARCHAR(100)
 		\item phone\_no INT
+		\item Cities\_city\_id INT
 	\end{itemize}
 	\item Projects
 		\begin{itemize}
@@ -130,7 +131,6 @@ We want to know what actions are realised in each city, storing its name, countr
 		\item name VARCHAR(45)
 		\item country VARCHAR(45)
 		\item no\_of\_habitants INT
-		\item HO\_id INT
 	\end{itemize}
 	\item Directors
 		\begin{itemize}
@@ -150,14 +150,26 @@ We want to know what actions are realised in each city, storing its name, countr
 \newpage
 \subsection{Implementation}
 \begin{lstlisting}{showstringspaces=false}[language=SQL]
-CREATE DATABASE NGO;
-USE NGO;
+CREATE DATABASE NGO1;
+USE NGO1;
+
+CREATE TABLE Cities (
+  city_id INT NOT NULL,
+  name VARCHAR(45) ,
+  country VARCHAR(45) ,
+  no_of_habitants INT ,
+  HO_id INT NOT NULL,
+  PRIMARY KEY (city_id)
+);
 
 CREATE TABLE Head_Office (
   HO_id INT NOT NULL,
   address VARCHAR(100),
   phone_no INT,
-  PRIMARY KEY (HO_id)
+  Cities_city_id INT,
+  PRIMARY KEY (HO_id),
+  FOREIGN KEY (Cities_city_id)
+  REFERENCES Cities(city_id)
 );
 
 
@@ -186,17 +198,6 @@ CREATE TABLE Projects (
   REFERENCES Directors(id)
 );
 
-
-CREATE TABLE Cities (
-  city_id INT NOT NULL,
-  name VARCHAR(45) ,
-  country VARCHAR(45) ,
-  no_of_habitants INT ,
-  HO_id INT NOT NULL,
-  PRIMARY KEY (city_id, HO_id),
-  FOREIGN KEY (HO_id)
-  REFERENCES Head_Office(HO_id)
-);
 
 CREATE TABLE Actions (
   action_id INT NOT NULL,
